@@ -3,90 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <meta name="juicyads-site-verification" content="97ec99136ec7ed4eabb7c7cac44dd85c">
-    
     <title>Professional Online HTML Editor</title>
-    
     <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js" referrerpolicy="origin"></script>
-    
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-color: #f5f5f5;
-        }
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        h1 { font-size: 1.2rem; }
-        .clean-btn {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        /* 3-Column Split Screen Workspace */
-        .workspace {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-            gap: 5px;
-            padding: 5px;
-        }
-        .panel {
-            display: flex;
-            flex-direction: column;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        /* Width allocations for the 3 columns */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; height: 100vh; display: flex; flex-direction: column; background-color: #f5f5f5; }
+        header { background-color: #2c3e50; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .clean-btn { background-color: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .workspace { display: flex; flex: 1; overflow: hidden; gap: 5px; padding: 5px; }
+        .panel { display: flex; flex-direction: column; background: white; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
         .panel-visual { flex: 4; }
         .panel-source { flex: 4; }
         .panel-ads { flex: 2; background: #fafafa; min-width: 250px; }
-        
-        .panel-header {
-            background-color: #eaeaea;
-            padding: 6px 12px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #444;
-            border-bottom: 1px solid #ddd;
-        }
+        .panel-header { background-color: #eaeaea; padding: 6px 12px; font-size: 0.85rem; font-weight: bold; color: #444; border-bottom: 1px solid #ddd; }
         .editor-wrapper { flex: 1; height: 100%; }
-        #html-source {
-            flex: 1; width: 100%; height: 100%; border: none; resize: none;
-            font-family: 'Courier New', Courier, monospace; font-size: 14px;
-            padding: 15px; background-color: #282c34; color: #abb2bf;
-            outline: none; line-height: 1.5;
-        }
-        .ad-container {
-            padding: 15px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: center;
-        }
+        #html-source { flex: 1; width: 100%; height: 100%; border: none; resize: none; font-family: monospace; font-size: 14px; padding: 15px; background-color: #282c34; color: #abb2bf; outline: none; }
+        .ad-container { padding: 15px; text-align: center; }
     </style>
 </head>
 <body>
@@ -100,7 +33,7 @@
         <div class="panel panel-visual">
             <div class="panel-header">Visual Editor (WYSIWYG)</div>
             <div class="editor-wrapper">
-                <textarea id="visual-editor"><h2>Welcome to your new HTML Editor!</h2><p>Type here or edit the code on the right panel to see real-time synchronization.</p></textarea>
+                <textarea id="visual-editor"><h2>Welcome to your new HTML Editor!</h2><p>Type here or edit the code on the right panel.</p></textarea>
             </div>
         </div>
 
@@ -113,11 +46,11 @@
             <div class="panel-header">Sponsored Content / Ads</div>
             <div class="ad-container">
                 <!-- JuicyAds PopUnders v3 Start -->
-<script type="text/javascript" src="https://js.juicyads.com/jp.php?c=4474u203v294u4r2p2a4636474&u=https%3A%2F%2Fwww.juicyads.rocks"></script>
-<!-- JuicyAds PopUnders v3 End -->
- </div>               
-                </div>
+                <script type="text/javascript" src="https://js.juicyads.com/jp.php?c=4474u203u294u4r2p2a4636474&u=https%3A%2F%2Fwww.juicyads.rocks"></script>
+                <!-- JuicyAds PopUnders v3 End -->
+            </div>
         </div>
+    </div>
 
     <script>
         const sourceTextarea = document.getElementById('html-source');
@@ -148,17 +81,15 @@
         sourceTextarea.addEventListener('input', function () {
             if (!isUpdating) {
                 isUpdating = true;
-                const newContent = sourceTextarea.value;
-                tinymce.get('visual-editor').setContent(newContent);
+                tinymce.get('visual-editor').setContent(sourceTextarea.value);
                 isUpdating = false;
             }
         });
 
         function cleanHTML() {
             let currentContent = sourceTextarea.value;
-            currentContent = currentContent.replace(//g, ''); 
+            currentContent = currentContent.replace(/<!--[\s\S]*?-->/g, ''); 
             currentContent = currentContent.replace(/\s*style="[^"]*"/gi, ''); 
-            currentContent = currentContent.replace(/<span[^>]*>([\s\S]*?)<\/span>/gi, '$1'); 
             sourceTextarea.value = currentContent;
             tinymce.get('visual-editor').setContent(currentContent);
         }
