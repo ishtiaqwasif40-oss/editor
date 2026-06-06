@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="juicyads-site-verification" content="97ec99136ec7ed4eabb7c7cac44dd85c">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="juicyads-site-verification" content="97ec99136ec7ed4eabb7c7cac44dd85c">
+    
     <title>Professional Online HTML Editor</title>
     
-    <!-- Load Open-Source TinyMCE Framework for the Visual WYSIWYG Editor -->
     <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js" referrerpolicy="origin"></script>
     
     <style>
@@ -31,9 +32,7 @@
             align-items: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        h1 {
-            font-size: 1.2rem;
-        }
+        h1 { font-size: 1.2rem; }
         .clean-btn {
             background-color: #e74c3c;
             color: white;
@@ -42,12 +41,9 @@
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.2s;
         }
-        .clean-btn:hover {
-            background-color: #c0392b;
-        }
-        /* Main Workspace: Split-Screen Layout */
+        
+        /* 3-Column Split Screen Workspace */
         .workspace {
             display: flex;
             flex: 1;
@@ -56,7 +52,6 @@
             padding: 5px;
         }
         .panel {
-            flex: 1;
             display: flex;
             flex-direction: column;
             background: white;
@@ -64,6 +59,11 @@
             border-radius: 4px;
             overflow: hidden;
         }
+        /* Width allocations for the 3 columns */
+        .panel-visual { flex: 4; }
+        .panel-source { flex: 4; }
+        .panel-ads { flex: 2; background: #fafafa; min-width: 250px; }
+        
         .panel-header {
             background-color: #eaeaea;
             padding: 6px 12px;
@@ -72,25 +72,20 @@
             color: #444;
             border-bottom: 1px solid #ddd;
         }
-        /* Container for the TinyMCE Instance */
-        .editor-wrapper {
-            flex: 1;
-            height: 100%;
-        }
-        /* Raw Source Code Textarea styling */
+        .editor-wrapper { flex: 1; height: 100%; }
         #html-source {
-            flex: 1;
-            width: 100%;
-            height: 100%;
-            border: none;
-            resize: none;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
+            flex: 1; width: 100%; height: 100%; border: none; resize: none;
+            font-family: 'Courier New', Courier, monospace; font-size: 14px;
+            padding: 15px; background-color: #282c34; color: #abb2bf;
+            outline: none; line-height: 1.5;
+        }
+        .ad-container {
             padding: 15px;
-            background-color: #282c34;
-            color: #abb2bf;
-            outline: none;
-            line-height: 1.5;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
         }
     </style>
 </head>
@@ -102,18 +97,23 @@
     </header>
 
     <div class="workspace">
-        <!-- Left Side: Visual WYSIWYG Panel -->
-        <div class="panel">
+        <div class="panel panel-visual">
             <div class="panel-header">Visual Editor (WYSIWYG)</div>
             <div class="editor-wrapper">
                 <textarea id="visual-editor"><h2>Welcome to your new HTML Editor!</h2><p>Type here or edit the code on the right panel to see real-time synchronization.</p></textarea>
             </div>
         </div>
 
-        <!-- Right Side: Raw Code Syntax Panel -->
-        <div class="panel">
+        <div class="panel panel-source">
             <div class="panel-header">Source HTML Code</div>
             <textarea id="html-source" spellcheck="false" placeholder="Your raw HTML code will output here..."></textarea>
+        </div>
+
+        <div class="panel panel-ads">
+            <div class="panel-header">Sponsored Content / Ads</div>
+            <div class="ad-container">
+                
+                </div>
         </div>
     </div>
 
@@ -121,7 +121,6 @@
         const sourceTextarea = document.getElementById('html-source');
         let isUpdating = false;
 
-        // Initialize TinyMCE Visual Editor
         tinymce.init({
             selector: '#visual-editor',
             height: '100%',
@@ -131,7 +130,6 @@
             toolbar: 'undo redo | blocks | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | bullist numlist | table link image | removeformat',
             branding: false,
             setup: function (editor) {
-                // When content changes in the Visual Editor, update the Source Panel
                 editor.on('input change keyup NodeChange', function () {
                     if (!isUpdating) {
                         isUpdating = true;
@@ -139,15 +137,12 @@
                         isUpdating = false;
                     }
                 });
-
-                // Set initial content on load
                 editor.on('init', function () {
                     sourceTextarea.value = editor.getContent();
                 });
             }
         });
 
-        // When code is edited inside the Source Code panel, sync it back to the Visual panel
         sourceTextarea.addEventListener('input', function () {
             if (!isUpdating) {
                 isUpdating = true;
@@ -157,16 +152,11 @@
             }
         });
 
-        // Utility: Core cleaning function simulating basic markup normalization
         function cleanHTML() {
             let currentContent = sourceTextarea.value;
-
-            // Simple cleaning regex operations:
-            currentContent = currentContent.replace(/<!--[\s\S]*?-->/g, ''); // Clear comments
-            currentContent = currentContent.replace(/\s*style="[^"]*"/gi, ''); // Remove inline styles
-            currentContent = currentContent.replace(/<span[^>]*>([\s\S]*?)<\/span>/gi, '$1'); // Strip empty/useless spans
-
-            // Re-inject clean code into both interfaces
+            currentContent = currentContent.replace(//g, ''); 
+            currentContent = currentContent.replace(/\s*style="[^"]*"/gi, ''); 
+            currentContent = currentContent.replace(/<span[^>]*>([\s\S]*?)<\/span>/gi, '$1'); 
             sourceTextarea.value = currentContent;
             tinymce.get('visual-editor').setContent(currentContent);
         }
